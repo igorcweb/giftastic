@@ -27,14 +27,13 @@
       alert(`${newTopic} has already been added`);
     } else if (newTopic) {
       topics.push(newTopic.toLowerCase());
-
       localStorage.setItem('storedTopics', JSON.stringify(topics));
-
       buttons.empty();
       renderButtons();
     }
   });
-  $('.clear').on('click', function() {
+  $('.clear').on('click', function(e) {
+    e.preventDefault();
     localStorage.clear();
     topics = [];
     buttons.empty();
