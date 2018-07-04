@@ -1,6 +1,6 @@
 (function() {
   const buttons = $('#buttons');
-  let topics = ['cat', 'dog', 'mouse', 'rabbit'];
+  let topics = ['dog', 'cat', 'mouse', 'rabbit'];
   const gifs = $('#gifs');
   let newTopic;
   let storedTopics;
@@ -10,10 +10,13 @@
     if (storedTopics) {
       topics = storedTopics;
     }
-    console.log('topics; ', topics);
-    topics.forEach(function(topic) {
+    // topics.forEach(function(topic) {
+    $.each(topics, function(index, topic) {
+      let data = topic.replace(' ', '+');
       $('#buttons')
-        .append(`<button class="btn btn-outline-primary m-2">${topic}</button>`)
+        .append(
+          `<button class="btn btn-outline-primary m-2" data-topic=${data}>${topic}</button>`
+        )
         .attr('class', 'm-2');
     });
   }
@@ -40,4 +43,23 @@
     renderButtons();
   });
   renderButtons();
+  const api_key = () => {
+    return '5n53cDRx0FU49ewKdFwuBjKCTqy8XNip&limit=5';
+  };
+  let url;
+  buttons.on('click', '.btn', function() {
+    const query = this.dataset.topic;
+    url = `https://api.giphy.com/v1/gifs/search?q=${query}&api_key=${api_key()}`;
+    getGif();
+  });
+  function getGif() {
+    $.get(url)
+      .then(res => {
+        let src = res.data[0].images.original.url;
+        gifs.append(`<img src=${src}>`);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 })();
