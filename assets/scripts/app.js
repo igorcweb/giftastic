@@ -9,7 +9,8 @@
     'adventure',
     'hiking',
     'biking',
-    'music'
+    'music',
+    'technology'
   ];
   const gifs = $('#gifs');
   let newTopic;
@@ -47,13 +48,27 @@
   function getGifs() {
     let srcStill;
     let srcAnimated;
+    let rating;
     $.get(url)
       .then(res => {
         $.each(res.data, function(index) {
           srcStill = res.data[index].images.fixed_height_still.url;
           srcAnimated = res.data[index].images.fixed_height.url;
+          rating = res.data[index].rating.toUpperCase();
+          console.log('Rating: ', rating);
           gifs.prepend(
-            `<div class='img d-inline-block'><img src=${srcStill} class="img m-3" data-still=${srcStill} data-animated=${srcAnimated} data-state='still'><i class="fas fa-times"></i></div>`
+            // `<div class='img d-inline-block'>
+            //   <p class="rating">Rating: ${rating}</p>
+            //   <img src=${srcStill} class="img m-3" data-still=${srcStill} data-animated=${srcAnimated} data-state='still'>
+            //   <i class="fas fa-times"></i>
+            // </div>`
+            `<div class="card img d-inline-block m-3">
+              <div class="card-body py-1 bg-light">
+                <p class="card-text rating text-center">Rating: ${rating}</p>
+              </div>
+                <img src=${srcStill} class="card-img-bottom img" data-still=${srcStill} data-animated=${srcAnimated} data-state='still'>
+                 <i class="fas fa-times"></i>
+             </div>`
           );
         });
       })

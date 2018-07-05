@@ -16,18 +16,27 @@ div.img {
 }
 
 .img {
+  /* max-width: 94%; */
   cursor: pointer;
 }
+
+/* .card {
+  max-width: 94%;
+} */
 
 .fa-times {
   display: none;
   position: absolute;
-  top: 1.3rem;
-  right: 1.4rem;
+  top: 0.4rem;
+  right: 0.5rem;
   color: red;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
 }
 
 .isShowing {
   display: block;
+}
+
+p.rating {
+  color: #777;
 }
