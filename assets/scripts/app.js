@@ -5,7 +5,6 @@
     'cat',
     'car',
     'happy',
-    'turtle',
     'adventure',
     'hiking',
     'funny',
@@ -14,7 +13,7 @@
     'technology'
   ];
   let favorites = [];
-  let favoritesExist = false;
+  let firstFavAdded = false;
   const gifs = $('#gifs');
   let newTopic;
   let storedTopics;
@@ -70,16 +69,14 @@
           srcStill = res.data[index].images.fixed_height_still.url;
           srcAnimated = res.data[index].images.fixed_height.url;
           rating = res.data[index].rating.toUpperCase();
-          gifs.prepend(
-            `<div class="card img d-inline-block m-3">
+          gifs.prepend(`<div class="card img d-inline-block m-3">
               <div class="card-body py-1 bg-light">
                 <p class="card-text rating text-center">Rated ${rating}</p>
               </div>
-                <img src=${srcStill} class="card-img-bottom img" data-still=${srcStill} data-animated=${srcAnimated} data-state='still'>
                 <i class="fas fa-check isUnchecked"></i>
+                <img src=${srcStill} class="card-img-bottom img" data-still=${srcStill} data-animated=${srcAnimated} data-state='still'> 
                 <i class="fas fa-times"></i>
-             </div>`
-          );
+             </div>`);
         });
       })
       .catch(err => {
@@ -121,20 +118,22 @@
     e.stopPropagation();
     let $this = $(this);
     $this.toggleClass('isChecked isUnchecked');
-    console.log($this);
+
     if ($this.hasClass('isChecked')) {
-      favorites.push('asdf');
+      console.log($this.next()[0]);
+      favorites.push($this.next()[0]);
     } else {
-      favorites.splice(-1, 1);
+      favorites.splice(favorites.indexOf($this.next()[0]), 1);
     }
     console.log(favorites);
-    if (!favoritesExist) {
-      favoritesExist = true;
+    if (!firstFavAdded) {
+      firstFavAdded = true;
       renderButtons();
     } else {
-      favoritesExist = false;
+      firstFavAdded = false;
       renderButtons();
     }
+    console.log('favorites: ', favorites);
   });
 
   $('.go').on('click', addButton);
