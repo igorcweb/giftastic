@@ -16,27 +16,40 @@ div.img {
 }
 
 .img {
-  /* max-width: 94%; */
   cursor: pointer;
 }
-
-/* .card {
-  max-width: 94%;
-} */
 
 .fa-times {
   display: none;
   position: absolute;
   top: 0.4rem;
   right: 0.5rem;
-  color: red;
-  font-size: 1.3rem;
+  color: #333;
+  font-size: 1.2rem;
 }
 
-.isShowing {
-  display: block;
+.fa-times:hover {
+  color: #ff4444;
+}
+
+.fa-check {
+  display: none;
+  position: absolute;
+  color: #333;
+  font-size: 1.1rem;
+  top: 0.4rem;
+  left: 0.5rem;
 }
 
 p.rating {
   color: #777;
+}
+
+.isChecked {
+  display: block !important;
+  color: #5cb85c;
+}
+
+.isUnchecked {
+  display: none;
 }

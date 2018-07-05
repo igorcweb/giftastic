@@ -2,30 +2,46 @@
   const buttons = $('#buttons');
   let topics = [
     'dog',
+    'cat',
     'car',
     'happy',
     'turtle',
-    'sad',
     'adventure',
     'hiking',
+    'funny',
     'biking',
     'music',
     'technology'
   ];
+  let favorites = [];
+  let favoritesExist = false;
   const gifs = $('#gifs');
   let newTopic;
   let storedTopics;
   function renderButtons() {
+    buttons.empty();
     storedTopics = JSON.parse(localStorage.getItem('storedTopics'));
     if (storedTopics) {
       topics = storedTopics;
+    }
+
+    $('#buttons')
+      .prepend(
+        `<button class="favorites btn d-none btn-outline-success m-md-2 my-2 mr-3">Favorites</button>`
+      )
+      .attr('class', 'm-2');
+
+    if (favorites.length) {
+      $('.btn.favorites').addClass('d-inline-block');
+    } else {
+      $('.btn.favorites').removeClass('d-inline-block');
     }
 
     $.each(topics, function(index, topic) {
       let data = topic.replace(' ', '+');
       $('#buttons')
         .append(
-          `<button class="btn btn-outline-primary m-md-2 my-2 mr-3" data-topic=${data}>${topic}</button>`
+          `<button class="topic btn btn-outline-primary m-md-2 my-2 mr-3" data-topic=${data}>${topic}</button>`
         )
         .attr('class', 'm-2');
     });
@@ -41,7 +57,6 @@
     } else if (newTopic) {
       topics.push(newTopic.toLowerCase());
       localStorage.setItem('storedTopics', JSON.stringify(topics));
-      buttons.empty();
       renderButtons();
     }
   }
@@ -55,19 +70,14 @@
           srcStill = res.data[index].images.fixed_height_still.url;
           srcAnimated = res.data[index].images.fixed_height.url;
           rating = res.data[index].rating.toUpperCase();
-          console.log('Rating: ', rating);
           gifs.prepend(
-            // `<div class='img d-inline-block'>
-            //   <p class="rating">Rating: ${rating}</p>
-            //   <img src=${srcStill} class="img m-3" data-still=${srcStill} data-animated=${srcAnimated} data-state='still'>
-            //   <i class="fas fa-times"></i>
-            // </div>`
             `<div class="card img d-inline-block m-3">
               <div class="card-body py-1 bg-light">
-                <p class="card-text rating text-center">Rating: ${rating}</p>
+                <p class="card-text rating text-center">Rated ${rating}</p>
               </div>
                 <img src=${srcStill} class="card-img-bottom img" data-still=${srcStill} data-animated=${srcAnimated} data-state='still'>
-                 <i class="fas fa-times"></i>
+                <i class="fas fa-check isUnchecked"></i>
+                <i class="fas fa-times"></i>
              </div>`
           );
         });
@@ -82,34 +92,49 @@
     if ($this.data('state') === 'still') {
       $this.data('state', 'animated');
       $this.attr('src', $this.data('animated'));
-      console.log('state: ', $this.data('state'));
-      console.log('src: ', $this.attr('src'));
     } else {
       $this.data('state', 'still');
       $this.attr('src', $this.data('still'));
-      console.log('state:', $this.data('state'));
-      console.log('src: ', $this.attr('src'));
     }
   });
 
   gifs.on('mouseover', 'div.img', function() {
     $(this)
-      .find('i')
-      .addClass('isShowing');
+      .find('.fas')
+      .addClass('d-block');
   });
   gifs.on('mouseout', 'div.img', function() {
     $(this)
-      .find('i')
-      .removeClass('isShowing');
+      .find('.fas')
+      .removeClass('d-block');
   });
 
-  gifs.on('click', 'i', function(e) {
+  gifs.on('click', '.fa-times', function(e) {
     e.stopPropagation();
     $(this)
       .parent()
       .removeClass('d-inline-block')
       .addClass('d-none');
-    console.log($(this).parent());
+  });
+
+  gifs.on('click', '.fa-check', function(e) {
+    e.stopPropagation();
+    let $this = $(this);
+    $this.toggleClass('isChecked isUnchecked');
+    console.log($this);
+    if ($this.hasClass('isChecked')) {
+      favorites.push('asdf');
+    } else {
+      favorites.splice(-1, 1);
+    }
+    console.log(favorites);
+    if (!favoritesExist) {
+      favoritesExist = true;
+      renderButtons();
+    } else {
+      favoritesExist = false;
+      renderButtons();
+    }
   });
 
   $('.go').on('click', addButton);
@@ -130,8 +155,8 @@
     return 'XzaARDwSgwOpZyQ8n6ZV2X61Cn5EkkRX';
   };
   let url;
-  buttons.on('click', '.btn', function() {
-    const query = this.dataset.topic;
+  buttons.on('click', '.btn.topic', function() {
+    const query = $(this).data('topic');
     url = `https://api.giphy.com/v1/gifs/search?q=${query}&limit=10&api_key=${api_key()}`;
     getGifs();
   });
