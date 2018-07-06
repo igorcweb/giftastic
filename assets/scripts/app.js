@@ -1,7 +1,7 @@
 (function() {
   const buttons = $('#buttons');
   const defaultTopics = [
-    'puppy',
+    'dog',
     'cat',
     'running',
     'happy',
@@ -13,7 +13,7 @@
   ];
   let topics = Object.assign([], defaultTopics);
   let favorites = [];
-  let firstFavAdded = false;
+  let storedFavs;
   const gifs = $('#gifs');
   let newTopic;
   let storedTopics;
@@ -22,6 +22,11 @@
     storedTopics = JSON.parse(localStorage.getItem('storedTopics'));
     if (storedTopics) {
       topics = Object.assign([], storedTopics);
+    }
+
+    storedFavs = JSON.parse(localStorage.getItem('storedFavs'));
+    if (storedFavs.length) {
+      favorites = Object.assign([], storedFavs);
     }
 
     $('#buttons')
@@ -36,7 +41,7 @@
       $('.btn.favorites').removeClass('d-inline-block');
     }
 
-    $.each(topics, function(index, topic) {
+    $.each(topics, (index, topic) => {
       let data = topic.replace(' ', '+');
       $('#buttons')
         .append(
@@ -72,7 +77,7 @@
           gifs.prepend(
             `<div class="card img d-inline-block m-3">
               <div class="card-body py-1 bg-light">
-                <p class="card-text rating text-center">Rated ${rating}</p>
+                <p class="card-text rating text-center">Rating: ${rating}</p>
               </div>
                 <i class="fas fa-check isUnchecked"></i>
                 <img src=${srcStill} class="card-img-bottom img" data-still=${srcStill} data-animated=${srcAnimated} data-rating=${rating} data-state='still'> 
@@ -126,14 +131,11 @@
     } else {
       favorites.splice(favorites.indexOf($this.next()[0]), 1);
     }
-
-    if (!firstFavAdded) {
-      firstFavAdded = true;
-      renderButtons();
-    } else {
-      firstFavAdded = false;
-      renderButtons();
-    }
+    console.log('favorites: ', favorites);
+    localStorage.setItem('storedFavs', JSON.stringify(favorites));
+    storedFavs = JSON.parse(localStorage.getItem('storedFavs'));
+    console.log('storedFavs: ', storedFavs);
+    renderButtons();
   });
 
   $('.add').on('click', addButton);
@@ -162,9 +164,10 @@
     url = `https://api.giphy.com/v1/gifs/search?q=${query}&limit=10&api_key=${api_key()}`;
     getGifs();
   });
+
   buttons.on('click', '.btn.favorites', function() {
     gifs.empty();
-    $.each(favorites, function(index, gif) {
+    $.each(favorites, (index, gif) => {
       console.log(gif);
       rating = $(gif).data('rating');
       srcStill = $(gif).data('still');
@@ -172,7 +175,7 @@
       gifs.prepend(
         `<div class="card img d-inline-block m-3">
           <div class="card-body py-1 bg-light">
-            <p class="card-text rating text-center">Rated ${rating}</p>
+            <p class="card-text rating text-center">Rating: ${rating}</p>
           </div>
           <i class="fas fa-check isChecked"></i>
           <img src=${srcStill} class="card-img-bottom img" data-still=${srcStill} data-animated=${srcAnimated} data-state='still'>
