@@ -1,17 +1,17 @@
 (function() {
   const buttons = $('#buttons');
-  let topics = [
-    'dog',
+  const defaultTopics = [
+    'puppy',
     'cat',
-    'car',
+    'running',
     'happy',
     'adventure',
     'hiking',
-    'funny',
     'biking',
     'music',
     'technology'
   ];
+  let topics = Object.assign([], defaultTopics);
   let favorites = [];
   let firstFavAdded = false;
   const gifs = $('#gifs');
@@ -21,7 +21,7 @@
     buttons.empty();
     storedTopics = JSON.parse(localStorage.getItem('storedTopics'));
     if (storedTopics) {
-      topics = storedTopics;
+      topics = Object.assign([], storedTopics);
     }
 
     $('#buttons')
@@ -139,15 +139,18 @@
   $('.add').on('click', addButton);
   $('.clear-topics').on('click', function(e) {
     e.preventDefault();
-    localStorage.clear();
+    localStorage.removeItem('storedTopics');
     topics = [];
     buttons.empty();
     renderButtons();
   });
-  $('.clear-gifs').on('click', function(e) {
+  $('.reset').on('click', function(e) {
     e.preventDefault();
     localStorage.clear();
+    topics = Object.assign([], defaultTopics);
+    buttons.empty();
     gifs.empty();
+    renderButtons();
   });
   renderButtons();
   const api_key = () => {
