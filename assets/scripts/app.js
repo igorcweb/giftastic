@@ -24,11 +24,6 @@
       topics = Object.assign([], storedTopics);
     }
 
-    storedFavs = JSON.parse(localStorage.getItem('storedFavs'));
-    if (storedFavs.length) {
-      favorites = Object.assign([], storedFavs);
-    }
-
     $('#buttons')
       .prepend(
         `<button class="favorites btn d-none btn-outline-success m-md-2 my-2 mr-3">Favorites</button>`
@@ -79,9 +74,9 @@
               <div class="card-body py-1 bg-light">
                 <p class="card-text rating text-center">Rating: ${rating}</p>
               </div>
-                <i class="fas fa-check isUnchecked"></i>
-                <img src=${srcStill} class="card-img-bottom img" data-still=${srcStill} data-animated=${srcAnimated} data-rating=${rating} data-state='still'> 
-                <i class="fas fa-times"></i>
+              <i class="fas fa-check isUnchecked"></i>
+              <img src=${srcStill} class="card-img-bottom img" data-still=${srcStill} data-animated=${srcAnimated} data-rating=${rating} data-state='still'> 
+              <i class="fas fa-times"></i>
              </div>`
           );
         });
@@ -129,12 +124,20 @@
     if ($this.hasClass('isChecked')) {
       favorites.push($this.next()[0]);
     } else {
+      console.log(this);
       favorites.splice(favorites.indexOf($this.next()[0]), 1);
     }
     console.log('favorites: ', favorites);
-    localStorage.setItem('storedFavs', JSON.stringify(favorites));
-    storedFavs = JSON.parse(localStorage.getItem('storedFavs'));
-    console.log('storedFavs: ', storedFavs);
+    // localStorage.setItem('storedFavs', JSON.stringify(favorites));
+    // storedFavs = JSON.parse(localStorage.getItem('storedFavs'));
+    // storedFavs = JSON.parse(localStorage.getItem('storedFavs'));
+    // console.log('storedFavs: ', storedFavs);
+    // if (storedFavs.length) {
+    //   favorites = Object.assign([], storedFavs);
+    // }
+    // localStorage.setItem('favorites', JSON.stringify(favorites));
+    // storedFavs = localStorage.getItem(favorites);
+    // console.log('storedFavs: ', JSON.parse(storedFavs));
     renderButtons();
   });
 
