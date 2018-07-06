@@ -69,14 +69,16 @@
           srcStill = res.data[index].images.fixed_height_still.url;
           srcAnimated = res.data[index].images.fixed_height.url;
           rating = res.data[index].rating.toUpperCase();
-          gifs.prepend(`<div class="card img d-inline-block m-3">
+          gifs.prepend(
+            `<div class="card img d-inline-block m-3">
               <div class="card-body py-1 bg-light">
                 <p class="card-text rating text-center">Rated ${rating}</p>
               </div>
                 <i class="fas fa-check isUnchecked"></i>
-                <img src=${srcStill} class="card-img-bottom img" data-still=${srcStill} data-animated=${srcAnimated} data-state='still'> 
+                <img src=${srcStill} class="card-img-bottom img" data-still=${srcStill} data-animated=${srcAnimated} data-rating=${rating} data-state='still'> 
                 <i class="fas fa-times"></i>
-             </div>`);
+             </div>`
+          );
         });
       })
       .catch(err => {
@@ -120,12 +122,11 @@
     $this.toggleClass('isChecked isUnchecked');
 
     if ($this.hasClass('isChecked')) {
-      console.log($this.next()[0]);
       favorites.push($this.next()[0]);
     } else {
       favorites.splice(favorites.indexOf($this.next()[0]), 1);
     }
-    console.log(favorites);
+
     if (!firstFavAdded) {
       firstFavAdded = true;
       renderButtons();
@@ -133,10 +134,9 @@
       firstFavAdded = false;
       renderButtons();
     }
-    console.log('favorites: ', favorites);
   });
 
-  $('.go').on('click', addButton);
+  $('.add').on('click', addButton);
   $('.clear-topics').on('click', function(e) {
     e.preventDefault();
     localStorage.clear();
@@ -158,5 +158,24 @@
     const query = $(this).data('topic');
     url = `https://api.giphy.com/v1/gifs/search?q=${query}&limit=10&api_key=${api_key()}`;
     getGifs();
+  });
+  buttons.on('click', '.btn.favorites', function() {
+    gifs.empty();
+    $.each(favorites, function(index, gif) {
+      console.log(gif);
+      rating = $(gif).data('rating');
+      srcStill = $(gif).data('still');
+      srcAnimated = $(gif).data('animated');
+      gifs.prepend(
+        `<div class="card img d-inline-block m-3">
+          <div class="card-body py-1 bg-light">
+            <p class="card-text rating text-center">Rated ${rating}</p>
+          </div>
+          <i class="fas fa-check isChecked"></i>
+          <img src=${srcStill} class="card-img-bottom img" data-still=${srcStill} data-animated=${srcAnimated} data-state='still'>
+          <i class="fas fa-times"></i>
+        </div>`
+      );
+    });
   });
 })();
