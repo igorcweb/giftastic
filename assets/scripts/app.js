@@ -124,7 +124,6 @@
     if ($this.hasClass('isChecked')) {
       favorites.push($this.next()[0]);
     } else {
-      console.log(this);
       favorites.splice(favorites.indexOf($this.next()[0]), 1);
     }
     console.log('favorites: ', favorites);
@@ -171,7 +170,6 @@
   buttons.on('click', '.btn.favorites', function() {
     gifs.empty();
     $.each(favorites, (index, gif) => {
-      console.log(gif);
       rating = $(gif).data('rating');
       srcStill = $(gif).data('still');
       srcAnimated = $(gif).data('animated');
