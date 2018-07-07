@@ -29,6 +29,16 @@
         `<button class="favorites btn d-none btn-outline-success m-md-2 my-2 mr-3">Favorites</button>`
       )
       .attr('class', 'm-2');
+    console.log(storedFavs);
+
+    storedFavs = JSON.parse(localStorage.getItem('storedFavs'));
+    console.log('storedFavs: ', storedFavs);
+
+    if (storedFavs) {
+      favorites = Object.assign([], storedFavs);
+    }
+
+    console.log(favorites);
 
     if (favorites.length) {
       $('.btn.favorites').addClass('d-inline-block');
@@ -142,9 +152,7 @@
 
     //console.log('parsed favs: ', JSON.stringify(favorites));
 
-    // localStorage.setItem('storedFavs', JSON.stringify(favorites));
-    // storedFavs = JSON.parse(localStorage.getItem('storedFavs'));
-    // console.log('storedFavs: ', storedFavs);
+    localStorage.setItem('storedFavs', JSON.stringify(favorites));
 
     // localStorage.setItem('favorites', JSON.stringify(favorites));
     // storedFavs = localStorage.getItem('favorites');
@@ -154,9 +162,6 @@
     // storedFavs = JSON.parse(document.cookie);
     // console.log('storedFavs: ', storedFavs);
 
-    if (storedFavs) {
-      favorites = Object.assign([], storedFavs);
-    }
     renderButtons();
   });
 
@@ -170,10 +175,12 @@
   });
   $('.reset').on('click', function(e) {
     e.preventDefault();
-    localStorage.clear();
+
     topics = Object.assign([], defaultTopics);
     buttons.empty();
     gifs.empty();
+    favorites = [];
+    localStorage.clear();
     renderButtons();
   });
   renderButtons();
