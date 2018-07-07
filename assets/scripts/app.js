@@ -66,9 +66,10 @@
     $.get(url)
       .then(res => {
         $.each(res.data, function(index) {
-          srcStill = res.data[index].images.fixed_height_still.url;
-          srcAnimated = res.data[index].images.fixed_height.url;
-          rating = res.data[index].rating.toUpperCase();
+          let results = res.data;
+          srcStill = results[index].images.fixed_height_still.url;
+          srcAnimated = results[index].images.fixed_height.url;
+          rating = results[index].rating.toUpperCase();
           gifs.prepend(
             `<div class="card img d-inline-block m-3">
               <div class="card-body py-1 bg-light">
@@ -116,27 +117,46 @@
       .addClass('d-none');
   });
 
+  let gifData;
   gifs.on('click', '.fa-check', function(e) {
     e.stopPropagation();
     let $this = $(this);
     $this.toggleClass('isChecked isUnchecked');
 
+    //deconstructed the gif object before pushing it into the array so that I only have what I need
+    gifData = {
+      rating: $this.next().data('rating'),
+      srcStill: $this.next().data('still'),
+      srcAnimated: $this.next().data('animated')
+    };
+
+    console.log(gifData);
+
     if ($this.hasClass('isChecked')) {
-      favorites.push($this.next()[0]);
+      favorites.push(gifData);
     } else {
-      favorites.splice(favorites.indexOf($this.next()[0]), 1);
+      favorites.splice(favorites.indexOf(gifData), 1);
     }
-    console.log('favorites: ', favorites);
+
+    //console.log('favorites: ', favorites);
+
+    //console.log('parsed favs: ', JSON.stringify(favorites));
+
     // localStorage.setItem('storedFavs', JSON.stringify(favorites));
     // storedFavs = JSON.parse(localStorage.getItem('storedFavs'));
-    // storedFavs = JSON.parse(localStorage.getItem('storedFavs'));
     // console.log('storedFavs: ', storedFavs);
-    // if (storedFavs.length) {
-    //   favorites = Object.assign([], storedFavs);
-    // }
+
     // localStorage.setItem('favorites', JSON.stringify(favorites));
-    // storedFavs = localStorage.getItem(favorites);
+    // storedFavs = localStorage.getItem('favorites');
     // console.log('storedFavs: ', JSON.parse(storedFavs));
+
+    // document.cookie = JSON.stringify(favorites);
+    // storedFavs = JSON.parse(document.cookie);
+    // console.log('storedFavs: ', storedFavs);
+
+    if (storedFavs) {
+      favorites = Object.assign([], storedFavs);
+    }
     renderButtons();
   });
 
@@ -170,9 +190,10 @@
   buttons.on('click', '.btn.favorites', function() {
     gifs.empty();
     $.each(favorites, (index, gif) => {
-      rating = $(gif).data('rating');
-      srcStill = $(gif).data('still');
-      srcAnimated = $(gif).data('animated');
+      console.log(gif.rating);
+      rating = gif.rating;
+      srcStill = gif.srcStill;
+      srcAnimated = gif.srcAnimated;
       gifs.prepend(
         `<div class="card img d-inline-block m-3">
           <div class="card-body py-1 bg-light">
