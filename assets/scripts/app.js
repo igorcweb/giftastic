@@ -29,16 +29,12 @@
         `<button class="favorites btn d-none btn-outline-success m-md-2 my-2 mr-3">Favorites</button>`
       )
       .attr('class', 'm-2');
-    console.log(storedFavs);
 
     storedFavs = JSON.parse(localStorage.getItem('storedFavs'));
-    console.log('storedFavs: ', storedFavs);
 
     if (storedFavs) {
       favorites = Object.assign([], storedFavs);
     }
-
-    console.log(favorites);
 
     if (favorites.length) {
       $('.btn.favorites').addClass('d-inline-block');
@@ -69,6 +65,7 @@
       renderButtons();
     }
   }
+
   function getGifs() {
     let srcStill;
     let srcAnimated;
@@ -88,7 +85,7 @@
               <i class="fas fa-check isUnchecked"></i>
               <img src=${srcStill} class="card-img-bottom img" data-still=${srcStill} data-animated=${srcAnimated} data-rating=${rating} data-state='still'> 
               <i class="fas fa-times"></i>
-             </div>`
+              </div>`
           );
         });
       })
@@ -140,32 +137,19 @@
       srcAnimated: $this.next().data('animated')
     };
 
-    console.log(gifData);
-
     if ($this.hasClass('isChecked')) {
       favorites.push(gifData);
     } else {
       favorites.splice(favorites.indexOf(gifData), 1);
     }
 
-    //console.log('favorites: ', favorites);
-
-    //console.log('parsed favs: ', JSON.stringify(favorites));
-
     localStorage.setItem('storedFavs', JSON.stringify(favorites));
-
-    // localStorage.setItem('favorites', JSON.stringify(favorites));
-    // storedFavs = localStorage.getItem('favorites');
-    // console.log('storedFavs: ', JSON.parse(storedFavs));
-
-    // document.cookie = JSON.stringify(favorites);
-    // storedFavs = JSON.parse(document.cookie);
-    // console.log('storedFavs: ', storedFavs);
 
     renderButtons();
   });
 
   $('.add').on('click', addButton);
+
   $('.clear-topics').on('click', function(e) {
     e.preventDefault();
     localStorage.removeItem('storedTopics');
@@ -173,9 +157,9 @@
     buttons.empty();
     renderButtons();
   });
+
   $('.reset').on('click', function(e) {
     e.preventDefault();
-
     topics = Object.assign([], defaultTopics);
     buttons.empty();
     gifs.empty();
@@ -183,7 +167,9 @@
     localStorage.clear();
     renderButtons();
   });
+
   renderButtons();
+
   const api_key = () => {
     return 'XzaARDwSgwOpZyQ8n6ZV2X61Cn5EkkRX';
   };
