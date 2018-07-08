@@ -136,11 +136,18 @@
       srcStill: $this.next().data('still'),
       srcAnimated: $this.next().data('animated')
     };
-
     if ($this.hasClass('isChecked')) {
       favorites.push(gifData);
     } else {
-      favorites.splice(favorites.indexOf(gifData), 1);
+      let gifIndex;
+      // Get the index of gif to be removed from the favorites
+      $.each(favorites, (index, fav) => {
+        if (JSON.stringify(fav) === JSON.stringify(gifData)) {
+          gifIndex = index;
+        }
+      });
+
+      favorites.splice(gifIndex, 1);
     }
 
     localStorage.setItem('storedFavs', JSON.stringify(favorites));
@@ -183,8 +190,7 @@
   buttons.on('click', '.btn.favorites', function() {
     gifs.empty();
     $.each(favorites, (index, gif) => {
-      console.log(gif.rating);
-      rating = gif.rating;
+      rating = gif.rating.toUpperCase();
       srcStill = gif.srcStill;
       srcAnimated = gif.srcAnimated;
       gifs.prepend(
@@ -193,7 +199,7 @@
             <p class="card-text rating text-center">Rating: ${rating}</p>
           </div>
           <i class="fas fa-check isChecked"></i>
-          <img src=${srcStill} class="card-img-bottom img" data-still=${srcStill} data-animated=${srcAnimated} data-state='still'>
+          <img src=${srcStill} class="card-img-bottom img" data-still=${srcStill} data-animated=${srcAnimated} data-rating=${rating} data-state='still'>
           <i class="fas fa-times"></i>
         </div>`
       );
