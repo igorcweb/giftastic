@@ -139,8 +139,8 @@
     if ($this.hasClass('isChecked')) {
       favorites.push(gifData);
     } else {
-      let gifIndex;
       // Get the index of gif to be removed from the favorites
+      let gifIndex;
       $.each(favorites, (index, fav) => {
         if (JSON.stringify(fav) === JSON.stringify(gifData)) {
           gifIndex = index;
