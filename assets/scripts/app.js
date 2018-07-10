@@ -72,8 +72,8 @@
     let rating;
     $.get(url)
       .then(res => {
-        $.each(res.data, function(index) {
-          let results = res.data;
+        const results = res.data;
+        $.each(results, index => {
           srcStill = results[index].images.fixed_height_still.url;
           srcAnimated = results[index].images.fixed_height.url;
           rating = results[index].rating.toUpperCase();
@@ -130,16 +130,18 @@
     let $this = $(this);
     $this.toggleClass('isChecked isUnchecked');
 
-    //deconstructed the gif object before pushing it into the array so that I only have what I need
+    //deconstructed the gif object before pushing it into the array so that it only has what I need
+
     gifData = {
       rating: $this.next().data('rating'),
       srcStill: $this.next().data('still'),
       srcAnimated: $this.next().data('animated')
     };
+
     if ($this.hasClass('isChecked')) {
       favorites.push(gifData);
     } else {
-      // Get the index of gif to be removed from the favorites
+      // Get the index of the gif to be removed from the favorites
       let gifIndex;
       $.each(favorites, (index, fav) => {
         if (JSON.stringify(fav) === JSON.stringify(gifData)) {
